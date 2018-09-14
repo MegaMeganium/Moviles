@@ -4,6 +4,7 @@ package pe.edu.upc.catchup.viewControllers.fragments
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +14,15 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.common.Priority
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.JSONObjectRequestListener
+import com.androidnetworking.interfaces.ParsedRequestListener
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import org.json.JSONObject
 import pe.edu.upc.catchup.R
 import pe.edu.upc.catchup.models.Article
+import pe.edu.upc.catchup.network.ArticleResponse
 import pe.edu.upc.catchup.network.NewsApi
 import pe.edu.upc.catchup.viewControllers.adapters.ArticlesAdapter
+import kotlin.math.log
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -32,47 +36,54 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment() {
 
-    var article = ArrayList<Article>()
+    var articles = ArrayList<Article>()
+    lateinit var articlesRecyclerView: RecyclerView
+    lateinit var articlesAdapter: ArticlesAdapter
+    lateinit var articlesLayoutManager: RecyclerView.LayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        val articleRecycleView = view.articlesRecyclerView
-        val articlesAdapter = ArticlesAdapter(article, view.context)
-        val articlesLayoutManager = GridLayoutManager(view.context, 2)
+        articlesRecyclerView = view.articlesRecyclerView
+        articlesAdapter = ArticlesAdapter(articles, view.context)
+        articlesLayoutManager = GridLayoutManager(view.context, 2)
 
-        articleRecycleView.adapter = articlesAdapter
-        articleRecycleView.layoutManager = articlesLayoutManager
+        articlesRecyclerView.adapter = articlesAdapter
+        articlesRecyclerView.layoutManager = articlesLayoutManager
 
         AndroidNetworking.get(NewsApi.topHeadlinesUrl)
-                .addPathParameter("apiKey", getString(R.string.news_api_key))
-                .addPathParameter("country", "us")
-                .setTag("CatchUp")
+                .addQueryParameter("apikey", getString(R.string.news_api_key))
+                .addQueryParameter("country","us")
                 .setPriority(Priority.LOW)
+                .setTag("CatchUp")
                 .build()
-                .getAsJSONObject(object: JSONObjectRequestListener{
-                    override fun onResponse(response: JSONObject?) {
+                .getAsObject(ArticleResponse::class.java, object: ParsedRequestListener<ArticleResponse> {
+                    override fun onResponse(response: ArticleResponse?) {
                         Log.d("Response", response.toString())
-                        val status = response!!.getString("status")
+                        val status = response!!.status
                         if(status.equals("error", true)){
-                            Log.d("CatchUp", response.getString("message"))
+                            Log.d("CatchUp", response.message)
                             return
                         }
-                        val jsonArticles = response.getJSONArray("articles")
-                        Log.d("CatchUp",jsonArticles.length() as String /* .toString() */)
-                        //TODO: convert JSONarray to ArrayList<Article> and assing to artices
+                        articles = response.articles!!
+                        articlesAdapter.articles = articles /*se debe convertir a mutable click y al foco rojo*/
+                        articlesAdapter.notifyDataSetChanged()
+
+                        /*val foundArticles = response.articles!!
+                        Log.d("CatchUp","Found ${foundArticles.size}")
+                        val firstSourceName = foundArticles.first().source.name
+                        Log.d("CatchUp", "First Article Source Name is ${firstSourceName}")*/
                     }
 
                     override fun onError(anError: ANError?) {
-                        /*anError!! -> fuerza sintactiamente a que se comporte como no nulo (podria se nulo)*/
                         Log.d("CatchUp", anError!!.message)
                     }
 
                 })
-
         return view
     }
 
 }
+

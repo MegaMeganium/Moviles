@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
+    <com.androidnetworking.widget.ANImageView
         android:id="@+id/pictureimageView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_image_size"
