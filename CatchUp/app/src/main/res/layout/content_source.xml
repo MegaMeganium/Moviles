@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-    android:id="@+id/articleLayout"
-
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".viewControllers.activities.SourceActivity"
+    tools:showIn="@layout/activity_source">
 
     <com.androidnetworking.widget.ANImageView
-        android:id="@+id/pictureimageView"
+        android:id="@+id/logoImageView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_image_size"
+        android:layout_height="@dimen/image_big_side"
         android:layout_margin="@dimen/default_margin"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@mipmap/ic_launcher"/>
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/nameTextview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
-        app:layout_constraintTop_toBottomOf="@id/pictureimageView"
+        app:layout_constraintTop_toBottomOf="@id/logoImageView"
         android:text="@string/mock_text"
-        android:textAlignment="center"/>
+        android:textStyle="bold"/>
 
 </android.support.constraint.ConstraintLayout>

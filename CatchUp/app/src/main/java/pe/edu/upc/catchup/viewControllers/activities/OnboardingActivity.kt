@@ -9,6 +9,7 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import kotlinx.android.synthetic.main.content_onboarding.*
 import pe.edu.upc.catchup.R
+import pe.edu.upc.catchup.models.SettingsRepository
 
 class OnboardingActivity : AppCompatActivity() {
 
@@ -22,10 +23,15 @@ class OnboardingActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }*/
 
-        startButton.setOnClickListener { view -> startActivity(Intent(view.context, MainActivity::class.java)) }
+        startButton.setOnClickListener { view ->
+            val settings = SettingsRepository(view.context)
+            settings.didShowOnboarding = true
+            startActivity(Intent(view.context, MainActivity::class.java))
+        }
         /*
         * intent: donde estoy y a donde qiero ir
         * */
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

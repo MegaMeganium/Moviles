@@ -2,9 +2,12 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:id="@+id/sourceLayout"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
+    <com.androidnetworking.widget.ANImageView
         android:id="@+id/logoImageView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_image_size"
@@ -17,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
-        app:layout_constraintTop_toBottomOf="@id/pictureimageView"
+        app:layout_constraintTop_toBottomOf="@id/logoImageView"
         android:text="@string/mock_text"/>
 
 </android.support.constraint.ConstraintLayout>

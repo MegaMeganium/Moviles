@@ -1,5 +1,6 @@
 package pe.edu.upc.catchup.viewControllers.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.design.widget.BottomNavigationView
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import pe.edu.upc.catchup.R
+import pe.edu.upc.catchup.models.SettingsRepository
 import pe.edu.upc.catchup.viewControllers.fragments.FavoritesFragment
 import pe.edu.upc.catchup.viewControllers.fragments.HomeFragment
 import pe.edu.upc.catchup.viewControllers.fragments.SettingsFragment
@@ -26,6 +28,10 @@ class MainActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         navigation.selectedItemId = R.id.navigation_home
+        val settings = SettingsRepository(this)
+        if(settings.shouldShowOnboarding){
+            startActivity(Intent(this, OnboardingActivity::class.java))
+        }
     }
 
     private fun fragmentFor(item: MenuItem): Fragment {
